@@ -227,13 +227,56 @@ The preset stayed as well: both read the same data point, so they can't disagree
 
 ![The Climate dashboard in Home Assistant](../assets/screenshots/ha-klimat-dashboard.jpg)
 
-The `fan` tile: power, 4 speed buttons (off, low, medium, high) and a dropdown with the modes. Below
-it the humidity `select` and 2 sensors, then 12 hours of history. The saw-tooth temperature graph
-is recuperation at work: the unit keeps reversing the airflow (those are the 2 recuperation cycles from the
-manual), so the sensor sees outside air and room air in turn.
+This screenshot predates my understanding of night mode. It still shows 12 hours of history: the
+saw-tooth temperature line is recuperation at work — the unit keeps reversing the airflow (those are
+the 2 cycles from the manual), so the sensor sees outside air and room air in turn. Pretty, but not
+useful day to day, so the graphs are gone now. What I got wrong about night mode, and why that flaw
+ended up improving voice control, is in the section above.
 
-The 11 raw LocalTuya switches are still there under the hood as a debugging screwdriver — they're
-just not on the dashboard.
+Here is where it landed:
+
+![Every control in a single card](../assets/screenshots/ha-klimat-single-card.jpg)
+
+The `fan` tile: power, 4 speed buttons (off, low, medium, high) and a dropdown with the modes. Below
+it the night mode toggle, the humidity `select` and 2 sensors.
+
+The 11 raw LocalTuya switches are still there under the hood as a debugging screwdriver — they're just
+not on the dashboard.
+
+### Getting it into one card
+
+The `fan` tile and the list of remaining rows are different card types, so out of the box they are
+always two panels with two borders. `vertical-stack` puts one under the other, but the borders stay.
+
+The only way to get a single border is the `vertical-stack-in-card` card from HACS
+([ofekashery/vertical-stack-in-card](https://github.com/ofekashery/vertical-stack-in-card)). Exactly
+one line of the dashboard config changes:
+
+```yaml
+type: custom:vertical-stack-in-card
+cards:
+  - type: tile
+    entity: fan.hrv_kitchen
+    features:
+      - type: fan-speed
+      - type: fan-preset-modes
+        style: dropdown
+  - type: entities
+    entities:
+      - entity: switch.hrv_night
+        name: Night mode
+      - type: divider
+      - entity: select.hrv_humidity
+      - entity: sensor.hrv_temperature
+      - entity: sensor.hrv_humidity
+```
+
+Drop the nested list's title: inside a shared border it reads as a stray separator.
+
+Decide for yourself whether it's worth it. The card is pure cosmetics, but the dashboard now depends on
+a third-party add-on: remove it and you get "Custom element doesn't exist" where the card used to be.
+Switching the type back to plain `vertical-stack` fixes that, so the risk is small — a fair trade for a
+home dashboard.
 
 ## How to lay out the files
 
