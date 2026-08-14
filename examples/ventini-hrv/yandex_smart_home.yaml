@@ -1,0 +1,34 @@
+# Export config for the Yandex Smart Home component (dext0r).
+#
+# Wire it up in configuration.yaml as:
+#     yandex_smart_home: !include yandex_smart_home.yaml
+#
+# Only entities carrying the label selected in the integration options are exported.
+# The label goes on the fan entity, NOT on the sensors below — they arrive as
+# properties of the fan, and labelling them too would duplicate them as separate
+# devices.
+#
+# Reminder: this file is read only at Home Assistant startup. Reloading the config
+# entry re-reads the cloud connection, not the YAML. After editing, restart HA and
+# refresh the device list in the Yandex app.
+
+entity_config:
+  fan.hrv_kitchen:
+    name: HRV kitchen
+
+    modes:
+      # Yandex accepts only its own fixed vocabulary for the "program" capability:
+      # normal, eco, min, turbo, medium, max, quiet, auto, high.
+      # Your own mode names cannot be used, so map them onto those words.
+      # Left: Yandex value. Right: the preset name in Home Assistant.
+      program:
+        normal: Recuperation
+        quiet: Night
+        max: Supply
+        min: Exhaust
+
+    properties:
+      - type: temperature
+        entity: sensor.hrv_temperature
+      - type: humidity
+        entity: sensor.hrv_humidity

@@ -1,0 +1,27 @@
+# --- Never commit: Tuya secrets and local keys ---
+devices.json
+tinytuya.json
+snapshot.json
+tuya-raw.json
+*.key
+# Deliberately broad. If it ever swallows a legitimate file, rename the file, not this rule.
+*secret*
+*token*
+
+# --- Home Assistant diagnostics (device IDs, uid, terminal_id, home coordinates) ---
+*-diagnostics*.json
+config_entry-*.json
+
+# --- Local environment ---
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# --- OS and editors ---
+.DS_Store
+.idea/
+.vscode/
+
+# --- MkDocs build output ---
+site/

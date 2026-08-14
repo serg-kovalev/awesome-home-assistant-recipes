@@ -1,0 +1,67 @@
+site_name: Awesome Home Assistant Recipes
+site_description: Recipes for devices that Home Assistant does not support out of the box
+site_url: https://serg-kovalev.github.io/awesome-home-assistant-recipes/
+repo_url: https://github.com/serg-kovalev/awesome-home-assistant-recipes
+repo_name: awesome-home-assistant-recipes
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+
+theme:
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - content.code.copy
+    - content.action.edit
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Dark theme
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Light theme
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+
+plugins:
+  - search
+
+nav:
+  - Home: index.md
+  - English:
+      - Tuya DP mapping: en/001-tuya-dp-mapping.md
+      - IoT network segment: en/002-iot-network-segment.md
+      - Template fan: en/003-template-fan.md
+      - Yandex Smart Home: en/004-yandex-smart-home.md
+      - Zigbee bindings: en/005-zigbee-bindings.md
+  - Community: community/README.md
+  - Русский:
+      - Карта точек данных Tuya: ru/001-tuya-dp-mapping.md
+      - Сегмент сети для IoT: ru/002-iot-network-segment.md
+      - Шаблонный fan: ru/003-template-fan.md
+      - Умный дом Яндекса: ru/004-yandex-smart-home.md
+      - Zigbee-биндинги: ru/005-zigbee-bindings.md

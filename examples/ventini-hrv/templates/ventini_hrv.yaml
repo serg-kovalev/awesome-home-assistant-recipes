@@ -1,0 +1,161 @@
+# Ventini HRV-60 — template fan and humidity select on top of raw LocalTuya switches.
+#
+# Wire it up in configuration.yaml as:
+#     template: !include_dir_merge_list templates/
+# and drop this file into the templates/ directory (create it, HA won't).
+#
+# Replace the entity ids below with your own. The DP-to-entity mapping is:
+#     DP 1            -> switch.hrv_power
+#     DP 101/102/103  -> switch.hrv_speed_low / _medium / _high
+#     DP 104          -> switch.hrv_night
+#     DP 105/106/107  -> switch.hrv_humidity_low / _medium / _high
+#     DP 111/112/113  -> switch.hrv_supply / _exhaust / _recuperation
+#     DP 108          -> sensor.hrv_humidity     (scaling 0.1)
+#     DP 109          -> sensor.hrv_temperature  (scaling 0.1)
+
+- fan:
+    - name: HRV kitchen
+      unique_id: ventini_hrv_kitchen_fan
+      state: "{{ is_state('switch.hrv_power', 'on') }}"
+      speed_count: 3
+
+      # {%- trims the newline: without it the template returns "100\n"
+      # and Home Assistant cannot parse it as a number
+      percentage: >-
+        {% if is_state('switch.hrv_speed_high', 'on') %}100
+        {%- elif is_state('switch.hrv_speed_medium', 'on') %}66
+        {%- elif is_state('switch.hrv_speed_low', 'on') %}33
+        {%- else %}0{% endif %}
+
+      preset_modes:
+        - Supply
+        - Exhaust
+        - Recuperation
+        - Night
+
+      # night mode is checked first: it is active alongside a ventilation mode
+      # and overrides it
+      preset_mode: >-
+        {% if is_state('switch.hrv_night', 'on') %}Night
+        {%- elif is_state('switch.hrv_recuperation', 'on') %}Recuperation
+        {%- elif is_state('switch.hrv_exhaust', 'on') %}Exhaust
+        {%- elif is_state('switch.hrv_supply', 'on') %}Supply
+        {%- else %}{{ none }}{% endif %}
+
+      turn_on:
+        - action: switch.turn_on
+          target:
+            entity_id: switch.hrv_power
+
+      turn_off:
+        - action: switch.turn_off
+          target:
+            entity_id: switch.hrv_power
+
+      set_percentage:
+        # No need to switch the other speeds off — this firmware clears them itself.
+        # Check that on your device before trusting it.
+        #
+        # Power on only when it is off. A redundant write has side effects on this
+        # firmware, and the 2 s delay would slow down every speed change otherwise.
+        - if:
+            - condition: template
+              value_template: >-
+                {{ percentage | int > 0
+                   and is_state('switch.hrv_power', 'off') }}
+          then:
+            - action: switch.turn_on
+              target:
+                entity_id: switch.hrv_power
+            - delay: "00:00:02"
+        - choose:
+            - conditions: "{{ percentage | int == 0 }}"
+              sequence:
+                - action: switch.turn_off
+                  target:
+                    entity_id: switch.hrv_power
+            - conditions: "{{ percentage | int <= 33 }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_speed_low
+            - conditions: "{{ percentage | int <= 66 }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_speed_medium
+          default:
+            - action: switch.turn_on
+              target:
+                entity_id: switch.hrv_speed_high
+
+      set_preset_mode:
+        # The device ignores mode commands while powered off, and needs a moment
+        # after power-up to apply its own defaults.
+        - if:
+            - condition: state
+              entity_id: switch.hrv_power
+              state: "off"
+          then:
+            - action: switch.turn_on
+              target:
+                entity_id: switch.hrv_power
+            - delay: "00:00:02"
+        - choose:
+            - conditions: "{{ preset_mode == 'Supply' }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_supply
+            - conditions: "{{ preset_mode == 'Exhaust' }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_exhaust
+            - conditions: "{{ preset_mode == 'Recuperation' }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_recuperation
+            - conditions: "{{ preset_mode == 'Night' }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_night
+
+- select:
+    - name: HRV kitchen humidity
+      unique_id: ventini_hrv_kitchen_humidity
+      icon: mdi:water-percent
+      options: "{{ ['off', 'low', 'medium', 'high'] }}"
+
+      state: >-
+        {% if is_state('switch.hrv_humidity_high', 'on') %}high
+        {%- elif is_state('switch.hrv_humidity_medium', 'on') %}medium
+        {%- elif is_state('switch.hrv_humidity_low', 'on') %}low
+        {%- else %}off{% endif %}
+
+      select_option:
+        - choose:
+            - conditions: "{{ option == 'low' }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_humidity_low
+            - conditions: "{{ option == 'medium' }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_humidity_medium
+            - conditions: "{{ option == 'high' }}"
+              sequence:
+                - action: switch.turn_on
+                  target:
+                    entity_id: switch.hrv_humidity_high
+          # "off" is the interesting case: the device ignores writing False to the
+          # humidity points. It only clears when the active ventilation mode is
+          # re-sent. Humidity control also requires recuperation mode.
+          default:
+            - action: switch.turn_on
+              target:
+                entity_id: switch.hrv_recuperation
