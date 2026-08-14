@@ -15,8 +15,8 @@ no entities. The integration diagnostics explain why:
 }
 ```
 
-One data point. Meanwhile the SmartLife app shows three ventilation modes, three fan speeds, a night
-mode, three humidity modes and two sensors for the same unit.
+1 data point. Meanwhile the SmartLife app shows 3 ventilation modes, 3 fan speeds, a night
+mode, 3 humidity modes and 2 sensors for the same unit.
 
 So `unsupported` doesn't mean "broken", it means "no profile for this model". But the bigger point is
 this: **the cloud schema is trimmed by the vendor**. There is nothing to discover in it — it really
@@ -85,15 +85,15 @@ DPS: {'1': False, '101': False, '102': False, '103': False, '104': False,
       '111': False, '112': False, '113': False}
 ```
 
-Thirteen points instead of one.
+13 points instead of 1.
 
 ## Step 3. Work out what each point does
 
-The values tell you nothing — eleven `False` all look the same. You need an experiment: change one
+The values tell you nothing — 11 `False` all look the same. You need an experiment: change one
 control in the app, see which point moved.
 
 Polling by hand is tedious, so use [`watch_dp.py`](https://github.com/serg-kovalev/awesome-home-assistant-recipes/blob/main/examples/tools/watch_dp.py). It polls every
-two seconds and prints **only changes**:
+2 seconds and prints **only changes**:
 
 ```
 [12:02:38] START: {"1": false, "101": false, ..., "108": 309, "109": 281}
@@ -109,9 +109,9 @@ The routine:
 3. Wait 5 seconds so the state lands in its own snapshot.
 4. Repeat for every control.
 
-Three things that will save you an hour:
+3 things that will save you an hour:
 
-**The pause matters.** Polling is every two seconds. Without a pause two actions merge into one
+**The pause matters.** Polling is every 2 seconds. Without a pause 2 actions merge into one
 snapshot and you can't tell which did what.
 
 **Numeric points drift on their own.** Sensors jitter by one unit and flood the log. Filter them out
@@ -147,7 +147,7 @@ dev.set_value(104, True)   # what turned on in the app?
 
 ## Firmware quirks worth checking on your device
 
-While mapping the points I hit four behaviours that aren't in any documentation. Look for the same
+While mapping the points I hit 4 behaviours that aren't in any documentation. Look for the same
 ones on your hardware — they decide how you write the integration.
 
 **A point that ignores `False`.** Writing `105 = False` does nothing: no error, a normal reply, the
@@ -158,9 +158,9 @@ mode (`113 = True` while it already is `True`). A plain switch entity won't work
 exactly how humidity gets cleared. Practical rule: **don't confirm state you don't need to change**.
 If the device is already on, don't send "on" again; you don't know what the firmware does with it.
 
-**Reporting lag.** After a write the device can report the old value for five seconds or more. I took
+**Reporting lag.** After a write the device can report the old value for 5 seconds or more. I took
 that for "the command didn't work" twice and nearly threw away a working solution. Check results after
-ten seconds, not two.
+10 seconds, not 2.
 
 **Mode commands are ignored while powered off.** The unit silently drops a mode change if
 `DP 1 = False`. Your scripts have to power it on first, wait, and only then set the mode.

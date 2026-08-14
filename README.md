@@ -9,9 +9,9 @@ real work on real hardware, with the dead ends included.
 
 ## Why this exists
 
-The vendor cloud for my heat recovery unit exposes exactly **one** data point: on/off.
-The device itself has **thirteen** — three fan speeds, three ventilation modes, a night mode,
-three humidity thresholds, and two sensors. Everything the app can do, the cloud API hides.
+The vendor cloud for my heat recovery unit exposes exactly **1** data point: on/off.
+The device itself has **13** — 3 fan speeds, 3 ventilation modes, a night mode,
+3 humidity thresholds, and 2 sensors. Everything the app can do, the cloud API hides.
 
 The manufacturer either didn't bother or couldn't. So I did it myself: full local control, a proper
 `fan` entity with speeds and presets, and voice control through a smart speaker.
@@ -22,9 +22,9 @@ These recipes are the reusable parts of that work.
 
 | # | Recipe | What you get |
 |---|---|---|
-| 1 | [Mapping data points of an "unsupported" Tuya device](docs/en/001-tuya-dp-mapping.md) | The full DP list when the cloud shows one |
+| 1 | [Mapping data points of an "unsupported" Tuya device](docs/en/001-tuya-dp-mapping.md) | The full DP list when the cloud shows 1 |
 | 2 | [A separate Wi-Fi segment for IoT, and how to reach it](docs/en/002-iot-network-segment.md) | Isolation that doesn't break local control |
-| 3 | [A template `fan` on top of eleven boolean data points](docs/en/003-template-fan.md) | One clean entity instead of a pile of switches |
+| 3 | [A template `fan` on top of 11 boolean data points](docs/en/003-template-fan.md) | One clean entity instead of a pile of switches |
 | 4 | [Exporting to Yandex Smart Home (Alice)](docs/en/004-yandex-smart-home.md) | Voice control, and what simply cannot be exported |
 | 5 | [Zigbee bindings: a wireless switch that works without the hub](docs/en/005-zigbee-bindings.md) | Instant response, works while HA reboots |
 

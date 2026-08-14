@@ -49,7 +49,7 @@ source in `zigbee-herdsman-converters`. For the YNDX-00535:
 endpoints: {b1_down: 1, b2_down: 2, b1_up: 3, b2_up: 4}
 ```
 
-So a two-gang switch has four press targets: `b1`/`b2` are the left and right key, `up`/`down` are the
+So a two-gang switch has 4 press targets: `b1`/`b2` are the left and right key, `up`/`down` are the
 top and bottom half of each. There is no "third and fourth button".
 
 Check this in the converter rather than guessing — the order isn't what you'd expect.
@@ -66,13 +66,13 @@ Zigbee2MQTT → device → **Bind** tab:
 4. Clusters — `genOnOff`.
 5. **Bind**.
 
-Here's the result on the **Bindings** page in Zigbee2MQTT: the button's four endpoints, each with its own
+Here's the result on the **Bindings** page in Zigbee2MQTT: the button's 4 endpoints, each with its own
 entry pointing at a relay, and next to it the preserved `Coordinator` entry that still carries presses to
 Home Assistant:
 
 ![The button's binding list in Zigbee2MQTT](../assets/screenshots/z2m-bindings-list.jpg)
 
-Two pitfalls, each cost me an attempt.
+2 pitfalls, each cost me an attempt.
 
 **A battery device sleeps.** Binding only succeeds while the button is awake. Press Bind on a sleeping
 device and you get `device/bind: Failed to bind`. The fix: start clicking the key once a second and press
@@ -106,7 +106,7 @@ that the gesture you use actually sends `toggle`.
 Yes. A binding is an entry in the button's own binding table: it sends the command straight to the relay.
 Shut down Home Assistant, restart Zigbee2MQTT, pull the stick out — the button keeps clicking the relay.
 
-Three clarifications:
+3 clarifications:
 
 **You still need a radio path.** If the button and the relay aren't in direct range, the frame is routed
 through routers — mains-powered devices. Those work without the coordinator; the mesh lives on, you just
