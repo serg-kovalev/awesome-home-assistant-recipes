@@ -68,6 +68,17 @@
               target:
                 entity_id: switch.hrv_power
             - delay: "00:00:02"
+        # Night mode swallows speed commands, so it has to go first. The unit restores
+        # whatever ran before night, which the choose below then overrides.
+        - if:
+            - condition: template
+              value_template: >-
+                {{ percentage | int > 0 and is_state('switch.hrv_night', 'on') }}
+          then:
+            - action: switch.turn_off
+              target:
+                entity_id: switch.hrv_night
+            - delay: "00:00:03"
         - choose:
             - conditions: "{{ percentage | int == 0 }}"
               sequence:
@@ -101,6 +112,16 @@
               target:
                 entity_id: switch.hrv_power
             - delay: "00:00:02"
+        # Same for the modes: while night is on, nothing else takes.
+        - if:
+            - condition: template
+              value_template: >-
+                {{ preset_mode != 'Night' and is_state('switch.hrv_night', 'on') }}
+          then:
+            - action: switch.turn_off
+              target:
+                entity_id: switch.hrv_night
+            - delay: "00:00:03"
         - choose:
             - conditions: "{{ preset_mode == 'Supply' }}"
               sequence:
