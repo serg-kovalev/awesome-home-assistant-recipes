@@ -4,7 +4,7 @@
 
 ## Why a separate network at all
 
-Cheap Wi-Fi gadgets and a modern home network don't mix well, for two reasons.
+Cheap Wi-Fi gadgets and a modern home network don't mix well, for 2 reasons.
 
 **The technical one.** IoT devices support a narrow set of parameters. Almost all of them are 2.4 GHz
 only, many need a 20 MHz channel, and they trip over modern access point options. Your main network,

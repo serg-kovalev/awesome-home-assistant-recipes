@@ -1,4 +1,4 @@
-# A template `fan` on top of eleven boolean data points
+# A template `fan` on top of 11 boolean data points
 
 [Русская версия](../ru/003-template-fan.md)
 
@@ -14,19 +14,19 @@ point. Through LocalTuya that looks like this:
 - `switch` × 3 — humidity thresholds low, medium, high
 - `sensor` × 2 — temperature and humidity
 
-![Raw LocalTuya entities: eleven switches](../assets/screenshots/localtuya-raw-switches.jpg)
+![Raw LocalTuya entities: 11 switches](../assets/screenshots/localtuya-raw-switches.jpg)
 
-Eleven toggles work, but they're awkward to use, and more importantly neither a voice assistant nor a
+11 toggles work, but they're awkward to use, and more importantly neither a voice assistant nor a
 decent dashboard card understands them. What you want is one `fan` with speeds and modes.
 
 ## Why a ready-made profile doesn't help
 
 The first idea is to write a tuya-local profile, where such devices are described in a YAML file. It
-doesn't work, for two reasons.
+doesn't work, for 2 reasons.
 
 **The device's modes are separate boolean points, not an enumeration.** A `fan` entity, in tuya-local
 and in templates alike, expects one point with a list of values (`low` / `medium` / `high` in a single
-DP). Three independent flags don't fit that shape.
+DP). 3 independent flags don't fit that shape.
 
 **A tuya-local profile has to be placed as a file inside the integration.** On Home Assistant OS
 without a file access add-on that's a separate quest.
@@ -36,8 +36,8 @@ portable — the template doesn't care which integration created the switches.
 
 ## Speeds through percentages
 
-`fan` supports percentages, and the Home Assistant docs give the mapping for three speeds outright: 33,
-66, 100. Read the current value from the three switches:
+`fan` supports percentages, and the Home Assistant docs give the mapping for 3 speeds outright: 33,
+66, 100. Read the current value from the 3 switches:
 
 ```yaml
 speed_count: 3
@@ -78,7 +78,7 @@ set_percentage:
 ```
 
 You don't need to enforce mutual exclusivity — the device clears the other speeds itself. In the UI
-you'll see it one poll late: for a second or two two switches can look enabled at once.
+you'll see it one poll late: 2 switches can look enabled at once for a second or two.
 
 ## Modes through presets
 
@@ -106,7 +106,7 @@ mode and has to override it.
 The `{{ none }}` branch is for a powered-off device: when no mode is active it's more honest to report
 "unknown" than to show a mode that isn't running.
 
-## Three workarounds for firmware quirks
+## 3 workarounds for firmware quirks
 
 This is the part you can't derive from documentation, only from observation.
 
@@ -138,14 +138,14 @@ that's exactly how humidity control gets cleared. What a redundant power confirm
 know, and I'd rather not find out on live hardware.
 
 There's a practical gain too: without the condition every mode change on a running unit would stall for
-two seconds on the delay. With it, the switch is immediate.
+2 seconds on the delay. With it, the switch is immediate.
 
 ### A point that ignores being turned off
 
 Humidity thresholds turn on by writing `True`, but **do not turn off by writing `False`** — the device
 silently ignores it. The only way to clear humidity control is to re-send the active ventilation mode.
 
-That's why humidity is a separate `select` instead of three switches: a select has an `off` option, and
+That's why humidity is a separate `select` instead of 3 switches: a select has an `off` option, and
 that's where the workaround goes.
 
 ```yaml
@@ -186,12 +186,12 @@ threw me off once while mapping the data points.
 
 ![The Climate dashboard in Home Assistant](../assets/screenshots/ha-klimat-dashboard.jpg)
 
-The `fan` tile: power, four speed buttons (off, low, medium, high) and a dropdown with the modes. Below
-it the humidity `select` and two sensors, then twelve hours of history. The saw-tooth temperature graph
-is recuperation at work: the unit keeps reversing the airflow (those are the two recuperation cycles from the
+The `fan` tile: power, 4 speed buttons (off, low, medium, high) and a dropdown with the modes. Below
+it the humidity `select` and 2 sensors, then 12 hours of history. The saw-tooth temperature graph
+is recuperation at work: the unit keeps reversing the airflow (those are the 2 recuperation cycles from the
 manual), so the sensor sees outside air and room air in turn.
 
-The eleven raw LocalTuya switches are still there under the hood as a debugging screwdriver — they're
+The 11 raw LocalTuya switches are still there under the hood as a debugging screwdriver — they're
 just not on the dashboard.
 
 ## How to lay out the files

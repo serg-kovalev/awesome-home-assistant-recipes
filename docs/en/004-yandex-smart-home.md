@@ -7,7 +7,7 @@ Home Assistant entities to Yandex's smart home platform. Installed through HACS.
 
 ## Connection type
 
-The component supports three modes. For a home with a single Home Assistant instance, **cloud** is the
+The component supports 3 modes. For a home with a single Home Assistant instance, **cloud** is the
 one — it goes through a ready-made Yaha Cloud skill. It needs no public HTTPS address and sets up in a
 minute: the wizard gives you a one-time code, you enter it in the Yandex app when adding the Yaha Cloud
 manufacturer.
@@ -27,9 +27,9 @@ Labels are the most convenient option for a home that keeps growing. You create 
 and attach it to the entities you want. A new device shows up after you give it the same label — no
 config changes.
 
-Three things that are easy to trip over:
+3 things that are easy to trip over:
 
-**Only one label is accepted.** The field in the integration options is not a list. If you keep semantic
+**Only 1 label is accepted.** The field in the integration options is not a list. If you keep semantic
 groups — say `Lights` and `Fans` — and want both exported, you'll need a third, combining label and
 point the filter at that. The semantic labels stay useful for automations and scripts.
 
@@ -50,7 +50,7 @@ component maps 33 / 66 / 100 onto the "fan speed" capability by itself — low, 
 **`select` is not supported.** It's on the unsupported list with the note "no clarity on what to do when
 different values are selected". Our humidity threshold control cannot be exported.
 
-If you really need it: expose three separate switches instead of the `select`, or describe a custom
+If you really need it: expose 3 separate switches instead of the `select`, or describe a custom
 capability (`custom_modes`) that calls `select.select_option`. I left humidity in Home Assistant only —
 it's rarely adjusted.
 
@@ -128,13 +128,13 @@ throwing errors on state queries.
 
 ## The end result
 
-One fan device with these capabilities:
+1 fan device with these capabilities:
 
 | Capability | What it does |
 |---|---|
 | On/off | power |
 | Fan speed | low / medium / high |
-| Program | four ventilation modes |
+| Program | 4 ventilation modes |
 | Temperature, humidity | device properties |
 
 Here's how it looks in the Yandex app. The unit sits in the room's device list next to the
