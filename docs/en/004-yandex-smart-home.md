@@ -83,6 +83,29 @@ it becomes "turn on the quiet program" instead of "turn on night mode". Clumsy, 
 You can still put some logic into the mapping: recuperation as the main mode became "normal", night mode
 really is the quiet one, supply blows at maximum, exhaust at minimum.
 
+## When a switch beats a mode
+
+Night mode first went across as a preset and became the "quiet program" — by the vocabulary above,
+that is the only thing it could have become. By voice that meant "turn on the quiet program":
+understandable, but nobody talks like that.
+
+It also turned out not to be a ventilation mode at all, but a separate toggle
+([recipe 3](003-template-fan.md)). So the same data point is now exported directly as well:
+
+```yaml
+yandex_smart_home:
+  entity_config:
+    switch.hrv_night:
+      name: Night mode
+```
+
+It arrives as its own device and the command sounds like a command: "turn on night mode". The preset
+stayed too — both read the same data point, so they cannot disagree, and there are now two phrasings
+instead of one awkward one.
+
+The general rule behind it: when a device capability doesn't fit Yandex's vocabulary, don't force it.
+A switch exported on its own usually beats a mode stretched to fit.
+
 ## Sensors as device properties
 
 If you simply label the temperature and humidity sensors, they arrive as **separate devices**. For

@@ -106,7 +106,7 @@ mode and has to override it.
 The `{{ none }}` branch is for a powered-off device: when no mode is active it's more honest to report
 "unknown" than to show a mode that isn't running.
 
-## 3 workarounds for firmware quirks
+## 4 workarounds for firmware quirks
 
 This is the part you can't derive from documentation, only from observation.
 
@@ -181,6 +181,47 @@ a second later.
 And yes, humidity control on this unit is only available in recuperation mode — it's stated in the
 manual, and the device switches itself to recuperation when you enable humidity. That behaviour is what
 threw me off once while mapping the data points.
+
+### Night mode turned out not to be a mode
+
+I first made night the fourth preset, next to supply, exhaust and recuperation — the app puts it in
+the same row, so the reasoning looked obvious. The mistake showed up later: there was no way out of
+night mode.
+
+What measurement on the live unit showed:
+
+- while night is on, **speed commands are ignored** — the unit simply doesn't take them;
+- the speed and ventilation-mode flags are all cleared, only night is set;
+- writing `False` to night **does work** — unlike the humidity thresholds;
+- once night goes off, the unit returns to whatever state it was in before night was switched on.
+
+So it isn't a fourth airflow direction, it's an override. The preset switched it on and nothing ever
+switched it off: pick "Recuperation" and it turns on, night stays, and the state template — which
+checks night first — keeps reporting "Night". It reads as a stuck tile.
+
+The workaround is simple: clear night before changing either the mode or the speed, and give the unit
+a couple of seconds for its own defaults.
+
+```yaml
+- if:
+    - condition: template
+      value_template: >-
+        {{ preset_mode != 'Night'
+           and is_state('switch.hrv_night', 'on') }}
+  then:
+    - action: switch.turn_off
+      target:
+        entity_id: switch.hrv_night
+    - delay: "00:00:03"
+```
+
+The same block belongs in `set_percentage`, or the speed buttons do nothing while night is on.
+
+The side effect was nicer than the bug. If night is a toggle rather than an airflow direction, then it
+should be a toggle in the interface too: its own row on the dashboard, next to the humidity control.
+And in Yandex Smart Home it now goes across as a separate device, which turns the voice command into
+"turn on night mode" instead of "turn on the quiet program" — see [recipe 4](004-yandex-smart-home.md).
+The preset stayed as well: both read the same data point, so they can't disagree.
 
 ## How it looks
 
