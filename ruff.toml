@@ -1,0 +1,6 @@
+# Pin the rule set so the same lint runs locally and in CI: ruff's defaults change
+# between versions, and a version bump should not turn into a red build.
+line-length = 100
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B"]

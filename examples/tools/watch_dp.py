@@ -74,7 +74,10 @@ def main():
     device.set_socketPersistent(True)
     device.set_socketTimeout(5)
 
-    print(f"[{stamp()}] watching {info['name']} at {info['ip']} (protocol {info['version']})", flush=True)
+    print(
+        f"[{stamp()}] watching {info['name']} at {info['ip']} (protocol {info['version']})",
+        flush=True,
+    )
 
     previous = None
     try:
@@ -85,7 +88,8 @@ def main():
 
                 if points:
                     if previous is None:
-                        print(f"[{stamp()}] START: {json.dumps(points, sort_keys=True)}", flush=True)
+                        dump = json.dumps(points, sort_keys=True)
+                        print(f"[{stamp()}] START: {dump}", flush=True)
                         previous = dict(points)
                     else:
                         changes = {
