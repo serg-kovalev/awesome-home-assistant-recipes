@@ -66,5 +66,24 @@ Nothing fancy. What matters:
 
 ## What CI checks
 
-The workflow builds the site and catches broken links and YAML errors. It cannot check whether your
-recipe is correct — only hardware can do that.
+Every pull request runs four checks, and you can run all of them locally before opening it:
+
+```bash
+pip install "mkdocs-material>=9,<10" pyyaml "ruff>=0.16,<0.17"
+
+mkdocs build --strict                         # broken links, pages missing from nav, missing images
+python3 .github/scripts/check_credentials.py  # credential-shaped strings, oversized images
+ruff check examples .github/scripts           # the Python tools
+```
+
+The fourth one parses every `examples/**/*.yaml`, which `mkdocs` doesn't touch.
+
+The secret check looks for credential *values* — an assigned `local_key`, a device id, a MAC address,
+coordinates from a Tuya dump — not for those words, since the articles discuss them constantly. If it
+flags a placeholder you introduced, add the placeholder to `ALLOWED` in the script rather than
+weakening a pattern.
+
+Screenshots it cannot read. Images are capped at 1 MB, and everything visible in them is checked by
+eye at review time — please check yours first.
+
+None of this tells anyone whether your recipe is correct. Only hardware can do that.

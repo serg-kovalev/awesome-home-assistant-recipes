@@ -1,0 +1,63 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    name: Build the site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - run: pip install "mkdocs-material>=9,<10"
+
+      # --strict turns warnings into errors: broken internal links, a page missing
+      # from nav, a referenced screenshot that isn't in the repository.
+      - run: mkdocs build --strict
+
+  checks:
+    name: Examples and secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - run: pip install pyyaml ruff
+
+      - name: Example YAML parses
+        run: |
+          python3 - <<'PY'
+          import pathlib, sys, yaml
+          bad = False
+          for path in sorted(pathlib.Path('examples').rglob('*.yaml')):
+              try:
+                  yaml.safe_load(path.read_text())
+                  print(f'ok   {path}')
+              except yaml.YAMLError as exc:
+                  print(f'FAIL {path}: {exc}')
+                  bad = True
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Lint the tools
+        run: ruff check examples .github/scripts
+
+      - name: No secrets
+        run: python3 .github/scripts/check_credentials.py
