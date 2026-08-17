@@ -58,6 +58,7 @@ nav:
       - Template fan: en/003-template-fan.md
       - Yandex Smart Home: en/004-yandex-smart-home.md
       - Zigbee bindings: en/005-zigbee-bindings.md
+      - Repeating alerts: en/006-alerts.md
   - Community: community/README.md
   - Русский:
       - Карта точек данных Tuya: ru/001-tuya-dp-mapping.md
@@ -65,3 +66,4 @@ nav:
       - Шаблонный fan: ru/003-template-fan.md
       - Умный дом Яндекса: ru/004-yandex-smart-home.md
       - Zigbee-биндинги: ru/005-zigbee-bindings.md
+      - Повторяющиеся тревоги: ru/006-alerts.md

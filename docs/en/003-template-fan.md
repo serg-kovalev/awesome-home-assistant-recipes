@@ -2,6 +2,8 @@
 
 [Русская версия](../ru/003-template-fan.md)
 
+*Created: 2026-08-14 · Updated: 2026-08-16*
+
 ## The task
 
 After mapping the data points ([recipe 1](001-tuya-dp-mapping.md)) Home Assistant has one entity per
@@ -277,6 +279,28 @@ Decide for yourself whether it's worth it. The card is pure cosmetics, but the d
 a third-party add-on: remove it and you get "Custom element doesn't exist" where the card used to be.
 Switching the type back to plain `vertical-stack` fixes that, so the risk is small — a fair trade for a
 home dashboard.
+
+## The second identical device
+
+Everything above sits on top of entities that already exist. Those entities — the 11 switches and 2
+sensors — are added in LocalTuya by hand, one form per data point, each asking for the number, the type
+and a name. That's 13 forms for one device. For three it's 39, and somewhere in the second one you will
+start making mistakes.
+
+You don't have to. LocalTuya can export the layout of a device you've already configured. Open the
+integration options, pick «Edit device», choose the device and tick the export checkbox. The file lands
+in `custom_components/localtuya/templates/`, named after the device.
+
+When you add the next unit, skip the manual route and pick «Choose template» instead. All 13 entities
+appear at once, with the same data point numbers, types and names.
+
+A word of warning about the word. In this article a template means the template `fan` — a Home Assistant
+construct. The export above is a template in LocalTuya's sense: a file describing which data point maps
+to what. Same word, different things, and mixing them up gets expensive.
+
+What's left by hand is small: the name, the address and the local key of the new device. Plus renaming
+entities if you want the room in the `entity_id` — the export carries names over from the donor device
+as they are.
 
 ## How to lay out the files
 

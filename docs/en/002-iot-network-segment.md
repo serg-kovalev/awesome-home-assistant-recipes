@@ -2,6 +2,8 @@
 
 [Русская версия](../ru/002-iot-network-segment.md)
 
+*Created: 2026-08-14*
+
 ## Why a separate network at all
 
 Cheap Wi-Fi gadgets and a modern home network don't mix well, for 2 reasons.

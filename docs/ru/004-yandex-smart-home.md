@@ -2,6 +2,8 @@
 
 [English version](../en/004-yandex-smart-home.md)
 
+*Создано: 2026-08-14*
+
 Здесь речь про компонент [Yandex Smart Home](https://docs.yaha-cloud.ru) (dext0r), который отдаёт
 сущности Home Assistant в УДЯ. Ставится через HACS.
 

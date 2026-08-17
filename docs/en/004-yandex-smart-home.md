@@ -2,6 +2,8 @@
 
 [Русская версия](../ru/004-yandex-smart-home.md)
 
+*Created: 2026-08-14*
+
 This is about the [Yandex Smart Home](https://docs.yaha-cloud.ru) component by dext0r, which exports
 Home Assistant entities to Yandex's smart home platform. Installed through HACS.
 
