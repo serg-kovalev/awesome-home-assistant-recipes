@@ -2,6 +2,8 @@
 
 [Русская версия](../ru/001-tuya-dp-mapping.md)
 
+*Created: 2026-08-14*
+
 ## The symptom
 
 The official Tuya integration shows the device as `Heat Recovery Ventilator (unsupported)` and creates

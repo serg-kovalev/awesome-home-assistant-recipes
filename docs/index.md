@@ -15,6 +15,7 @@ and voice control through a smart speaker.
 3. [A template fan on top of 11 boolean data points](en/003-template-fan.md)
 4. [Exporting to Yandex Smart Home](en/004-yandex-smart-home.md)
 5. [Zigbee bindings: a wireless switch that works without the hub](en/005-zigbee-bindings.md)
+6. [Alerts that keep nagging until you acknowledge them](en/006-alerts.md)
 
 ## Русский
 
@@ -23,6 +24,7 @@ and voice control through a smart speaker.
 3. [Шаблонный fan поверх 11 булевых точек](ru/003-template-fan.md)
 4. [Экспорт в Умный дом Яндекса](ru/004-yandex-smart-home.md)
 5. [Zigbee-биндинги: выключатель, который работает без хаба](ru/005-zigbee-bindings.md)
+6. [Тревоги, которые повторяются, пока их не подтвердишь](ru/006-alerts.md)
 
 Contributed recipes live in [Community](community/README.md) and are marked as not verified.
 
@@ -33,6 +35,9 @@ category `xfj`, listed as unsupported by the official Tuya integration.
 
 **Yandex YNDX-00535** — two-gang wireless Zigbee switch, bound directly to relays instead of going
 through automations.
+
+**Zigbee smoke detectors** — battery powered, report once every few hours at best, which is what the
+alerting recipe had to be built around.
 
 ## Secrets
 

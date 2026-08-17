@@ -2,6 +2,8 @@
 
 [Русская версия](../ru/005-zigbee-bindings.md)
 
+*Created: 2026-08-14*
+
 ## What this is about
 
 A wireless Zigbee button doesn't "control" anything. It sends an event. What happens next is decided by

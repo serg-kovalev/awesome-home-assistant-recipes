@@ -2,6 +2,8 @@
 
 [English version](../en/001-tuya-dp-mapping.md)
 
+*Создано: 2026-08-14*
+
 ## Симптом
 
 В официальной интеграции Tuya устройство отображается как `Heat Recovery Ventilator (unsupported)`.
